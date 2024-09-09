@@ -1,13 +1,14 @@
 #!/bin/bash
 
-# if running as root, create user mz and run as mz
+# if running as root, create user mz and exit
 if [ "$EUID" -eq 0 ]; then
     echo "Running as root, creating user mz"
     useradd -m mz
     usermod -aG sudo mz
     echo "Please set a password for mz"
     passwd mz
-    echo "Please log in as mz and run this script again"
+    echo "User mz created. Please log in as mz and re-run the script:"
+    echo "    curl -fsSL https://zoppelt.net/dev/install.sh | bash -i"
     exit
 fi
 
@@ -17,7 +18,7 @@ sudo apt upgrade -y
 sudo apt install curl git zsh -y
 
 echo "Setting zsh as default shell"
-chsh -s /bin/zsh
+sudo chsh -s /bin/zsh mz
 
 echo "Cloning dotfiles"
 git clone https://github.com/MarkusZoppelt/dotfiles.git ~/.dotfiles
