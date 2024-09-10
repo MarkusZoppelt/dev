@@ -15,7 +15,7 @@ fi
 echo "Updating and upgrading system"
 sudo apt update -y
 sudo apt upgrade -y
-sudo apt install curl git zsh -y
+sudo apt install clang cmake curl git lcov llvm zsh -y
 
 echo "Setting zsh as default shell"
 sudo chsh -s /bin/zsh mz
