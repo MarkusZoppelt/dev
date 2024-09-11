@@ -12,39 +12,43 @@ if [ "$EUID" -eq 0 ]; then
     exit
 fi
 
-echo "Updating and upgrading system"
+echo "🚀 Updating and upgrading system"
 sudo apt update -y
 sudo apt upgrade -y
 sudo apt install clang cmake curl git lcov llvm zsh -y
 
-echo "Setting zsh as default shell"
-sudo chsh -s /bin/zsh mz
-
-echo "Cloning dotfiles"
-git clone https://github.com/MarkusZoppelt/dotfiles.git ~/.dotfiles
-
-echo "Installing dotfiles"
-cd ~/.dotfiles
-bash install.sh
-cd -
-
-echo "Installing Nix via determinate systems installer"
+echo "🚀 Installing Nix via determinate systems installer"
 curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --no-confirm
 
-echo "Sourcing Nix"
+echo "🚀 Sourcing Nix"
 . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 
 mkdir -p ~/code
-echo "Cloning nix configuration"
+echo "🚀 Cloning nix configuration"
 git clone https://github.com/MarkusZoppelt/nix.git ~/code/nix
 
-echo "Installing from flake"
+echo "🚀 Installing from flake"
 cd ~/code/nix
 nix run nixpkgs#home-manager -- switch --flake .#Linux
 cd -
 
-echo "Installing tailscale"
-curl -fsSL https://tailscale.com/install.sh | sh
+# now we have gum and can use it
 
-echo "Starting Zsh"
+gum style --foreground 110 --bold "🚀 Setting zsh as default shell"
+sudo chsh -s /bin/zsh mz
+
+gum style --foreground 110 --bold "🚀 Cloning dotfiles"
+git clone https://github.com/MarkusZoppelt/dotfiles.git ~/.dotfiles
+
+gum style --foreground 110 --bold "🚀 Installing dotfiles"
+cd ~/.dotfiles
+bash install.sh
+cd -
+
+if gum confirm "Do you want to setup Tailscale?"; then
+    gum style --foreground 110 --bold "🚀 Installing Tailscale"
+    curl -fsSL https://tailscale.com/install.sh | sh
+fi
+
+gum style --foreground 110 --bold "Starting zsh"
 zsh
